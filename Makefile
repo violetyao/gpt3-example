@@ -8,6 +8,7 @@ num_output_turns ?= 10
 temperature ?= 0.7
 
 .PHONY: self-chat
+.PHONY: split-claim
 
 self-chat: self_chat.py prompts/chat.prompt prompts/is_pets.prompt partial_dialogs.txt
 	python self_chat.py \
@@ -23,3 +24,16 @@ self-chat: self_chat.py prompts/chat.prompt prompts/is_pets.prompt partial_dialo
 		--num_inputs $(num_inputs) \
 		--num_input_turns $(num_input_turns) \
 		--num_output_turns $(num_output_turns)
+
+split-claim: split_claim.py prompts/split_claim.prompt original_responses.txt
+	python split_claim.py \
+		--generation_prompt_template_file prompts/split_claim.prompt \
+		--input_file original_responses.txt \
+		--engine $(engine) \
+		--output_file output.txt \
+		--temperature $(temperature) \
+    	--top_p 0.9 \
+    	--frequency_penalty 0.0 \
+    	--presence_penalty 0.1 \
+		--num_inputs $(num_inputs) \
+		--max_tokens 120
